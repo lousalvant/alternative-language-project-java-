@@ -5,4 +5,4 @@ Three libraries I used were JUnit, BufferedReader, and HashMap. JUnit, as mentio
 According to my code’s output, the company with the highest average weight is Icemobile. There weren’t any phones that were announced in one year and released in another. There were 948 phones with only one feature sensor. The year with the most phone launches after 1999 is 2019. 
 
 
-<img width="328" alt="image" src="https://github.com/lousalvant/AlternativeLanguageProject/assets/116595993/1f8ed9ab-665e-4979-ac7d-285fd80290eb">
+![Screenshot 2024-04-18 152840](https://github.com/lousalvant/alt_lang_proj/assets/116595993/a7cdf6ad-0581-4e3a-a424-9f34bbe44fd3)

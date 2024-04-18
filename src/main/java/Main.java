@@ -145,8 +145,88 @@ public class Main {
             for (Cell cell : cells) {
                 System.out.println(cell);
             }
+            // Calculate answers to questions
+            calculateHighestAvgBodyWeight(cells);
+            findPhonesAnnouncedReleasedDifferentYear(cells);
+            countPhonesWithSingleSensor(cells);
+            findYearWithMostLaunches(cells);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void calculateHighestAvgBodyWeight(List<Cell> cells) {
+        Map<String, Float> avgWeights = new HashMap<>();
+        Map<String, Integer> counts = new HashMap<>();
+        for (Cell cell : cells) {
+            String oem = cell.getOem();
+            Float weight = cell.getBodyWeight();
+            if (weight != null) {
+                avgWeights.put(oem, avgWeights.getOrDefault(oem, 0f) + weight);
+                counts.put(oem, counts.getOrDefault(oem, 0) + 1);
+            }
+        }
+        String highestAvgOem = "";
+        float highestAvgWeight = 0;
+        for (Map.Entry<String, Float> entry : avgWeights.entrySet()) {
+            String oem = entry.getKey();
+            float totalWeight = entry.getValue();
+            int count = counts.get(oem);
+            float avgWeight = totalWeight / count;
+            if (avgWeight > highestAvgWeight) {
+                highestAvgWeight = avgWeight;
+                highestAvgOem = oem;
+            }
+        }
+        System.out.println("OEM with highest average body weight: " + highestAvgOem);
+    }
+
+  private static void findPhonesAnnouncedReleasedDifferentYear(List<Cell> cells) {
+      System.out.println("Phones announced in one year and released in another:");
+      boolean found = false;
+      for (Cell cell : cells) {
+          int announceYear = cell.getLaunchAnnounced();
+          Object releaseStatus = cell.getLaunchStatus();
+          if (announceYear != 0 && releaseStatus instanceof Integer && !releaseStatus.equals("Discontinued") && !releaseStatus.equals("Cancelled")) {
+              int releaseYear = (int) releaseStatus;
+              if (announceYear != releaseYear) {
+                  System.out.println("OEM: " + cell.getOem() + ", Model: " + cell.getModel());
+                  found = true;
+              }
+          }
+      }
+      if (!found) {
+          System.out.println("None");
+      }
+  }
+
+
+    private static void countPhonesWithSingleSensor(List<Cell> cells) {
+        int count = 0;
+        for (Cell cell : cells) {
+            String featuresSensors = cell.getFeaturesSensors();
+            if (featuresSensors != null && featuresSensors.split("\\s*,\\s*").length == 1) {
+                count++;
+            }
+        }
+        System.out.println("Number of phones with only one feature sensor: " + count);
+    }
+
+    private static void findYearWithMostLaunches(List<Cell> cells) {
+        Map<Integer, Integer> yearCounts = new HashMap<>();
+        int maxYear = 0;
+        int maxCount = 0;
+        for (Cell cell : cells) {
+            int launchYear = cell.getLaunchAnnounced();
+            if (launchYear > 1999) {
+                int count = yearCounts.getOrDefault(launchYear, 0) + 1;
+                yearCounts.put(launchYear, count);
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxYear = launchYear;
+                }
+            }
+        }
+        System.out.println("Year with the most phone launches after 1999: " + maxYear);
     }
 }

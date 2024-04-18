@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,5 +110,43 @@ class Cell {
 
     public String getModel() {
         return model;
+    }
+}
+
+public class Main {
+    public static List<Cell> readCsv(String filename) throws IOException {
+        List<Cell> cells = new ArrayList<>();
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            // Skip header
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length >= 12) { // Check if data has at least 12 elements
+                    cells.add(createCellFromData(data));
+                } else {
+                    System.err.println("Skipping line: " + line + " - Insufficient data columns.");
+                }
+            }
+        }
+        return cells;
+    }
+
+    private static Cell createCellFromData(String[] data) {
+        return new Cell(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
+    }
+
+    public static void main(String[] args) {
+        try {
+            String filename = "src/main/java/cells.csv";
+            List<Cell> cells = readCsv(filename);
+            // Output data
+            System.out.println("OEM            | Model               | Launch Announced | Launch Status   | Body Dimensions    | Body Weight | Body SIM      | Display Type       | Display Size | Display Resolution | Features Sensors   | Platform OS        ");
+            for (Cell cell : cells) {
+                System.out.println(cell);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
